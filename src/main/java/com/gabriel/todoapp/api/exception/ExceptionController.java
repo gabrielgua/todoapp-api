@@ -16,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -35,7 +36,6 @@ import java.util.stream.Collectors;
 public class ExceptionController extends ResponseEntityExceptionHandler {
 
     private MessageSource messageSource;
-
     private final String ERRO_GENERICO = "Ocorreu um erro interno inesperado no sistema. Tente novamente mais tarde.";
     private final String ERRO_DADOS_INVALIDOS = "Um ou mais campos estão inválidos. Favor corrigir e tentar novamente.";
 
@@ -86,6 +86,19 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 
         Erro erro = createErroBuilder(status, tipo, detail)
                 .userMessage(detail).build();
+
+        return handleExceptionInternal(ex, erro, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
+        String detail = ex.getMessage();
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        ErroTipo tipo = ErroTipo.ACESSO_NEGADO;
+
+        Erro erro = createErroBuilder(status, tipo, detail)
+                .userMessage("Você não possui acesso para realizar essa operação.")
+                .build();
 
         return handleExceptionInternal(ex, erro, new HttpHeaders(), status, request);
     }

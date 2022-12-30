@@ -1,4 +1,4 @@
-package com.gabriel.todoapp.api.config;
+package com.gabriel.todoapp.api.security;
 
 import com.gabriel.todoapp.domain.model.Usuario;
 import com.gabriel.todoapp.domain.repository.UsuarioRepository;

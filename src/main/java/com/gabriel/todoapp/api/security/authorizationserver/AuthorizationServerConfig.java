@@ -42,7 +42,6 @@ import java.util.Set;
 import java.util.UUID;
 
 @Configuration
-@EnableWebSecurity
 public class AuthorizationServerConfig {
 
     @Autowired
@@ -83,7 +82,7 @@ public class AuthorizationServerConfig {
                         .reuseRefreshTokens(false)
                         .build())
                 .clientSettings(ClientSettings.builder()
-                        .requireAuthorizationConsent(true)
+                        .requireAuthorizationConsent(false)
                         .build())
                 .build();
 

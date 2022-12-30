@@ -10,6 +10,7 @@ public enum ErroTipo {
     ERRO_DE_SISTEMA("/erro-de-sistema", "Erro interno do servidor"),
     RECURSO_NAO_ENCONTRADO("/recurso-nao-encontrado", "Recurso não encontrado"),
     DADOS_INVALIDOS("/dados-invalidos", "Dados Inválidos"),
+    ACESSO_NEGADO("/acesso-negado", "Acesso Negado"),
     ENTIDADE_EM_USO("/entidade-em-uso", "Entidade em uso");
 
     private String title;

@@ -5,12 +5,11 @@ import com.gabriel.todoapp.api.model.UsuarioRequest;
 import com.gabriel.todoapp.api.model.UsuarioResponse;
 import com.gabriel.todoapp.api.model.assembler.TarefaAssembler;
 import com.gabriel.todoapp.api.model.assembler.UsuarioAssembler;
-import com.gabriel.todoapp.domain.model.Tarefa;
+import com.gabriel.todoapp.api.security.CheckSecurity;
 import com.gabriel.todoapp.domain.model.TipoUsuario;
 import com.gabriel.todoapp.domain.model.Usuario;
 import com.gabriel.todoapp.domain.service.UsuarioService;
 import lombok.AllArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,29 +29,37 @@ public class UsuarioController {
 
     private UsuarioService service;
 
+    @CheckSecurity.Usuarios.CanListUsuarios
     @GetMapping
     public List<UsuarioResponse> listar() {
         return assembler.toCollectionList(service.listar());
     }
 
+    @CheckSecurity.Usuarios.CanSearchUsuario
     @GetMapping("/{id}")
     public UsuarioResponse buscarPorId(@PathVariable Long id) {
         return assembler.toModel(service.buscarPorId(id));
     }
 
+
+    @CheckSecurity.Usuarios.CanSearchUsuario
     @GetMapping("/{id}/tarefas")
     public List<TarefaResponse> buscarTarefasDoUsuario(@PathVariable Long id) {
         return tarefaAssembler.toCollectionList(service.buscarTarefas(id));
     }
 
+
+    @CheckSecurity.Usuarios.CanWriteUsuarios
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UsuarioResponse salvar(@Valid @RequestBody UsuarioRequest request) {
         Usuario usuario = assembler.toEntity(request);
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+        usuario.setTipo(TipoUsuario.USER);
         return assembler.toModel(service.salvar(usuario));
     }
 
+    @CheckSecurity.Usuarios.CanManageUsuarios
     @PutMapping("/{id}")
     public UsuarioResponse editar(@Valid @RequestBody UsuarioRequest request, @PathVariable Long id) {
         Usuario usuario = service.buscarPorId(id);
@@ -62,6 +69,7 @@ public class UsuarioController {
         return assembler.toModel(service.salvar(usuario));
     }
 
+    @CheckSecurity.Usuarios.CanManageUsuarios
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remover(@PathVariable Long id) {
         Usuario usuario = service.buscarPorId(id);

@@ -3,6 +3,7 @@ package com.gabriel.todoapp.api.controller;
 import com.gabriel.todoapp.api.model.TarefaRequest;
 import com.gabriel.todoapp.api.model.TarefaResponse;
 import com.gabriel.todoapp.api.model.assembler.TarefaAssembler;
+import com.gabriel.todoapp.api.security.CheckSecurity;
 import com.gabriel.todoapp.domain.model.Tarefa;
 import com.gabriel.todoapp.domain.model.Usuario;
 import com.gabriel.todoapp.domain.service.TarefaService;
@@ -24,16 +25,21 @@ public class TarefaController {
     private TarefaService service;
     private TarefaAssembler assembler;
 
+    @CheckSecurity.Tarefas.CanListTarefas
     @GetMapping
     public List<TarefaResponse> listar() {
         return assembler.toCollectionList(service.listar());
     }
 
+
+    @CheckSecurity.Tarefas.CanSearchTarefa
     @GetMapping("/{id}")
     public TarefaResponse buscar(@PathVariable Long id) {
         return assembler.toModel(service.buscarPorId(id));
     }
 
+
+    @CheckSecurity.Tarefas.CanWriteTarefas
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public TarefaResponse adicionar(
@@ -50,6 +56,7 @@ public class TarefaController {
         return assembler.toModel(service.salvar(tarefa));
     }
 
+    @CheckSecurity.Tarefas.CanManageTarefa
     @PutMapping("/{id}")
     public TarefaResponse editar(@PathVariable Long id, @Valid @RequestBody TarefaRequest request) {
         var tarefa = service.buscarPorId(id);
@@ -57,6 +64,7 @@ public class TarefaController {
         return assembler.toModel(service.salvar(tarefa));
     }
 
+    @CheckSecurity.Tarefas.CanManageTarefa
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remover(@PathVariable Long id) {
         var tarefa = service.buscarPorId(id);
@@ -64,6 +72,7 @@ public class TarefaController {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Tarefas.CanManageTarefa
     @GetMapping("/concluir/{id}")
     public ResponseEntity<Void> concluir(@PathVariable Long id) {
 
