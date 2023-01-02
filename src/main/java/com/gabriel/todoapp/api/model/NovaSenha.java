@@ -7,11 +7,10 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
-public class UsuarioRequest {
+public class NovaSenha {
 
     @NotBlank
-    private String nome;
-
+    private String senhaAtual;
     @NotBlank
-    private String email;
+    private String senhaNova;
 }

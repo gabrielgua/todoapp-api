@@ -7,11 +7,8 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
-public class UsuarioRequest {
+public class UsuarioComSenhaRequest extends UsuarioRequest {
 
     @NotBlank
-    private String nome;
-
-    @NotBlank
-    private String email;
+    private String senha;
 }

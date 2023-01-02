@@ -1,8 +1,6 @@
 package com.gabriel.todoapp.api.controller;
 
-import com.gabriel.todoapp.api.model.TarefaResponse;
-import com.gabriel.todoapp.api.model.UsuarioRequest;
-import com.gabriel.todoapp.api.model.UsuarioResponse;
+import com.gabriel.todoapp.api.model.*;
 import com.gabriel.todoapp.api.model.assembler.TarefaAssembler;
 import com.gabriel.todoapp.api.model.assembler.UsuarioAssembler;
 import com.gabriel.todoapp.api.security.CheckSecurity;
@@ -52,7 +50,7 @@ public class UsuarioController {
     @CheckSecurity.Usuarios.CanWriteUsuarios
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UsuarioResponse salvar(@Valid @RequestBody UsuarioRequest request) {
+    public UsuarioResponse salvar(@Valid @RequestBody UsuarioComSenhaRequest request) {
         Usuario usuario = assembler.toEntity(request);
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         usuario.setTipo(TipoUsuario.USER);
@@ -64,8 +62,6 @@ public class UsuarioController {
     public UsuarioResponse editar(@Valid @RequestBody UsuarioRequest request, @PathVariable Long id) {
         Usuario usuario = service.buscarPorId(id);
         assembler.copyToEntity(request, usuario);
-        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-
         return assembler.toModel(service.salvar(usuario));
     }
 
@@ -74,6 +70,13 @@ public class UsuarioController {
     public ResponseEntity<Void> remover(@PathVariable Long id) {
         Usuario usuario = service.buscarPorId(id);
         service.remover(usuario.getId());
+        return ResponseEntity.noContent().build();
+    }
+
+    @CheckSecurity.Usuarios.CanManageUsuarios
+    @PutMapping("/{id}/senha")
+    public ResponseEntity<Void> alterarSenha(@PathVariable Long id, @Valid @RequestBody NovaSenha senhaRequest) {
+        service.alterarSenha(id, senhaRequest.getSenhaAtual(), senhaRequest.getSenhaNova());
         return ResponseEntity.noContent().build();
     }
 }
