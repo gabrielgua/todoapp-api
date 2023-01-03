@@ -103,7 +103,6 @@ public class AuthorizationServerConfig {
                 }
 
                 context.getClaims().claim("usuario_id", usuario.getId().toString());
-                context.getClaims().claim("usuario_nome", usuario.getNome());
                 context.getClaims().claim("authorities", authorities);
             }
         });
