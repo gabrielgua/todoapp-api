@@ -29,7 +29,7 @@ public class ResourceServerConfig {
     public SecurityFilterChain authSecurityFilter(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/usuarios").anonymous()
-                .anyRequest().authenticated()
+                .and().authorizeRequests().anyRequest().authenticated()
                 .and().logout()
                     .clearAuthentication(true)
                     .invalidateHttpSession(true)
@@ -53,7 +53,9 @@ public class ResourceServerConfig {
             });
         });
 
-        return http.formLogin(Customizer.withDefaults()).build();
+        http.formLogin(customizer -> customizer.loginPage("/login"));
+
+        return http.build();
     }
 
     private JwtAuthenticationConverter jwtAuthenticationConverter() {

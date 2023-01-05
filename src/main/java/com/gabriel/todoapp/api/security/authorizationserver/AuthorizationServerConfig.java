@@ -53,7 +53,7 @@ public class AuthorizationServerConfig {
     public SecurityFilterChain defaultFilterChain(HttpSecurity http) throws Exception{
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 
-        return http.formLogin(Customizer.withDefaults()).build();
+        return http.formLogin(cutomizer -> cutomizer.loginPage("/login")).build();
     }
 
     @Bean

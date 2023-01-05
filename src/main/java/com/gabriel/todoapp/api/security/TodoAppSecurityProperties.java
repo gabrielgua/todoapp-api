@@ -19,8 +19,12 @@ public class TodoAppSecurityProperties {
     @NotBlank
     private String providerUrl;
 
+    @NotBlank
+    private String redirectUrisPermitidas;
+
     @NotNull
     private JksProperties jks;
+
 
     @Getter
     @Setter
