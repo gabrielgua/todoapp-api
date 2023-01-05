@@ -1,5 +1,6 @@
 package com.gabriel.todoapp.api.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -24,6 +25,9 @@ import java.util.stream.Collectors;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 public class ResourceServerConfig {
+
+    @Autowired
+    private TodoAppSecurityProperties properties;
 
     private static final String[] AUTH_WHITELIST = {
             "/login", "/logout", "/oauth2/logout"
@@ -50,7 +54,7 @@ public class ResourceServerConfig {
             logoutConfig.logoutSuccessHandler((request, response, authentication) -> {
                 String returnTo = request.getParameter("returnTo");
                 if (!StringUtils.hasText(returnTo)) {
-                    returnTo = "http://localhost:8080";
+                    returnTo = properties.getProviderUrl();
                 }
 
                 response.setStatus(302);

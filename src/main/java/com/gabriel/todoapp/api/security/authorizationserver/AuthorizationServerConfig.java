@@ -45,8 +45,9 @@ import java.util.UUID;
 public class AuthorizationServerConfig {
 
     @Autowired
+    private TodoAppSecurityProperties properties;
+    @Autowired
     private PasswordEncoder passwordEncoder;
-
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -67,13 +68,12 @@ public class AuthorizationServerConfig {
     public RegisteredClientRepository registeredClientRepository() {
         RegisteredClient angularClient = RegisteredClient
                 .withId(UUID.randomUUID().toString())
-                .clientId("todo-webapp")
-                .clientSecret(passwordEncoder.encode("webtodo123"))
+                .clientId(properties.getAngular().getClientId())
+                .clientSecret(passwordEncoder.encode(properties.getAngular().getClientSecret()))
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .redirectUri("http://127.0.0.1:4200/authorized")
-                .redirectUri("https://oidcdebugger.com/debug")
+                .redirectUris(uris -> uris.addAll(properties.getRedirectUrisPermitidas()))
                 .scope("READ")
                 .scope("WRITE")
                 .tokenSettings(TokenSettings.builder()
