@@ -9,67 +9,136 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 
     <style>
+
+    :root {
+    --primary-dark: #C2185B;
+    --accent-dark: #B0BEC5;
+    --warn: #F44336;
+    --success: rgb(164, 209, 164);
+    --secondary-text-dark: rgba(255,255,255,.7);
+    --background-dark: #303030;
+    --dark-dark: #242424;
+    --primary-light: #3F51B5;
+    --accent-light: #FF4081;
+    --header: #424242;
+    --whitesmoke: #f5f5f5;
+    }
+
 	html, body {
 		height: 100%;
 	}
 
 	body {
-		display: -ms-flexbox;
 		display: flex;
-		-ms-flex-align: center;
-		align-items: center;
-		padding-top: 40px;
-		padding-bottom: 40px;
-		background-color: #f5f5f5;
+
+        background-color: var(--background-dark);
 	}
+
+    .titulo-div {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .titulo {
+        color: var(--primary-dark);
+    }
+
+    .divider {
+        width: auto;
+        height: .1rem;
+        background-color: var(--header);
+        border-radius: 1rem;
+
+    }
 
 	.form-signin {
 		width: 100%;
-		max-width: 330px;
-		padding: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        border-radius: 1rem;
+		max-width: 423px;
+        min-width: 423px;
+		padding: 1.5rem;
 		margin: auto;
+        background-color: var(--dark-dark);
 	}
 
-	.form-signin .form-control {
-		position: relative;
-		box-sizing: border-box;
-		height: auto;
-		padding: 10px;
-		font-size: 16px;
-	}
+    .input {
+        padding: .75rem;
+        border-radius: .5rem;
+        background-color: transparent;
+        border: 1px solid var(--accent-dark);
+        color: var(--secondary-text-dark);
+    }
 
-	.form-signin .form-control:focus {
-		z-index: 2;
-	}
+    .input:focus {
+        outline: 1px solid var(--whitesmoke);
+    }
 
-	.form-signin input[type="email"] {
-		margin-bottom: -1px;
-		border-bottom-right-radius: 0;
-		border-bottom-left-radius: 0;
-	}
+    .btn-login {
+        background-color: var(--accent-dark);
+        padding: 1rem;
+        color: black;
+        font-size: medium;
+        font-weight: 500;
+        border: none;
+        border-radius: .5rem;
+        transition: .75s;
+    }
 
-	.form-signin input[type="password"] {
-		margin-bottom: 10px;
-		border-top-left-radius: 0;
-		border-top-right-radius: 0;
-	}
+    .btn-login:hover {
+        cursor: pointer;
+        background-color: #a0adb4;
+        border-radius: 1rem;
+        transition: .25s;
+    }
+
+    .btn-login:active {
+        outline: none;
+        background-color: var(--accent-dark);
+    }
+
+    .card-error {
+        color: var(--warn);
+        padding: .5rem;
+        border-radius: .5rem;
+        align-self: flex-start;
+    }
+
+    h1 {
+        margin: 0;
+    }
+
+    p {
+        top: 0;
+        margin-bottom: 0;
+        color: var(--accent-dark);
+        opacity: .5;
+    }
+
+
+
+
 	</style>
 </head>
 
 <body class="text-center">
 <form th:action="@{/login}" method="post" class="form-signin">
-    <h1 class="h3 mb-3 font-weight-normal">Acesso à AlgaFood</h1>
-
-    <p class="alert alert-danger" th:if="${#bools.isTrue(param.error)}">
+    <div class="titulo-div">
+        <h1 class="titulo">todoApp</h1>
+        <p>Acesso à API</p>
+    </div>
+    <div class="divider"></div>
+    <div class="card-error" th:if="${#bools.isTrue(param.error)}">
         O e-mail ou senha estão incorretos.
-    </p>
+    </div>
+    <input class="input" type="email" name="username" placeholder="Seu e-mail" required autofocus>
+    <input class="input" type="password" name="password" placeholder="Sua senha" required>
 
-    <input type="email" name="username" class="form-control" placeholder="Seu e-mail" required autofocus>
-    <input type="password" name="password" class="form-control" placeholder="Sua senha" required>
+    <button class="btn-login" type="submit">Login</button>
 
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
-
-    <p class="mt-5 mb-3 text-muted">&copy; AlgaWorks</p>
 </form>
 </body>
 </html>

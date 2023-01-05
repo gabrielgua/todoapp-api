@@ -25,9 +25,14 @@ import java.util.stream.Collectors;
 @EnableWebSecurity
 public class ResourceServerConfig {
 
+    private static final String[] AUTH_WHITELIST = {
+            "/login", "/logout", "/oauth2/logout"
+    };
+
     @Bean
     public SecurityFilterChain authSecurityFilter(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                .antMatchers(AUTH_WHITELIST).permitAll()
                 .antMatchers(HttpMethod.POST, "/usuarios").anonymous()
                 .and().authorizeRequests().anyRequest().authenticated()
                 .and().logout()
